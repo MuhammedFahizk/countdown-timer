@@ -3,12 +3,13 @@
 client_id = "eb673eef205840f561cce0cf315406c6"
 name = "countdown-timer-app"
 handle = "countdown-timer-app-8"
-application_url = "https://opposition-indices-rugs-highs.trycloudflare.com"
+application_url = "https://jenny-lights-msgid-medal.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
 dev_store_url = "shop-timer-store.myshopify.com"
+include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -16,9 +17,9 @@ scopes = ""
 
 [auth]
 redirect_urls = [
-  "https://opposition-indices-rugs-highs.trycloudflare.com/auth/callback",
-  "https://opposition-indices-rugs-highs.trycloudflare.com/auth/shopify/callback",
-  "https://opposition-indices-rugs-highs.trycloudflare.com/api/auth/callback"
+  "https://jenny-lights-msgid-medal.trycloudflare.com/auth/callback",
+  "https://jenny-lights-msgid-medal.trycloudflare.com/auth/shopify/callback",
+  "https://jenny-lights-msgid-medal.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

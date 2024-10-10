@@ -23,7 +23,9 @@ export default function App() {
         <Link to="/app" rel="home">
           Home
         </Link>
-        <Link to="/app/timer"> Timer </Link>
+        <Link to="/app/timer">Add  Timers </Link>
+        <Link to="/app/ListTimers"> List Timer </Link>
+
       </NavMenu>
       <Outlet />
     </AppProvider>

@@ -1,0 +1,14 @@
+{
+    "name": "Real-Time Timer",
+    "target": "block",
+    "type": "app",
+    "settings": [
+      {
+        "type": "text",
+        "id": "countdown_message",
+        "label": "Countdown Message",
+        "default": "Hurry up! Offer ends in:"
+      }
+    ]
+  }
+  

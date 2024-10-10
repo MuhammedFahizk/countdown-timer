@@ -1,0 +1,100 @@
+<!-- Countdown Timer Block -->
+<div id="countdown-timer" style="display: none; background-color: #FDFBF7; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden; max-width: 400px; margin: 20px auto;">
+  <h2 id="timer-title" style="margin: 0; padding: 8px 15px; background-color: #FDFBF7; color: #333; font-size: 18px; border-bottom: 1px solid #ddd;">Loading Timer...</h2>
+  <h3 id="timer-description" style="margin: 0; padding: 8px 15px; background-color: #FDFBF7; color: #666; font-size: 16px;"></h3>
+  <span id="time-remaining" style="display: block; padding: 15px; font-size: 20px; color: #d9534f; font-weight: bold; text-align: center; background-color: #ffffff; border-top: 1px solid #ddd;"></span>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const countdownTimer = document.getElementById("countdown-timer");
+    const timerTitle = document.getElementById("timer-title");
+    const timerDescription = document.getElementById("timer-description");
+    const timeRemainingEl = document.getElementById("time-remaining");
+
+    let intervalId = null;
+
+    if (countdownTimer) {
+      performApiCall()
+        .then(response => {
+          if (response.length > 0) {
+            const timerData = response[0];
+            countdownTimer.style.display = "block";
+            initializeTimer(timerData);
+          } else {
+            countdownTimer.style.display = "none";
+          }
+        })
+        .catch(error => {
+          countdownTimer.style.display = "none";
+          console.error("An error occurred:", error.message);
+        });
+    }
+
+    function initializeTimer(timerData) {
+      const { title, startDate, endDate, displayOptions, description } = timerData;
+      timerTitle.innerHTML = title || "Countdown Timer";
+      timerDescription.innerHTML = description || "";
+
+      if (displayOptions) {
+        countdownTimer.style.color = displayOptions.color || "red";
+        countdownTimer.style.fontSize = displayOptions.size === "large" ? "24px" : "16px";
+        countdownTimer.style.textAlign = displayOptions.position === "middle" ? "center" : "left";
+      }
+
+      const end = new Date(endDate).getTime();
+      updateTimer(end);
+      intervalId = setInterval(() => updateTimer(end), 1000);
+    }
+
+    function updateTimer(end) {
+      const now = new Date().getTime();
+      const distance = end - now;
+
+      if (distance < 0) {
+        clearInterval(intervalId);
+        timeRemainingEl.innerHTML = "Time's up!";
+      } else {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        timeRemainingEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
+    }
+
+    async function performApiCall() {
+      try {
+        const response = await fetch('http://localhost:5000/api/timers/theh2o2', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+      } catch (error) {
+        throw new Error(error.message || "Failed to perform the operation");
+      }
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Countdown Timer",
+  "target": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "countdown_message",
+      "label": "Countdown Message",
+      "default": "Hurry up! Offer ends in:"
+    }
+  ]
+}
+{% endschema %}

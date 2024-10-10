@@ -5,14 +5,48 @@ import Timer from '../models/Timer.js';
 // @route  GET /api/timers/:storeId
 // @access Public
 const getTimersByStore = async (req, res) => {
-  const { storeId } = req.params;
-  try {
-    const timers = await Timer.find({ storeId });
-    res.status(200).json(timers);
-  } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
-  }
-};
+    const { storeId } = req.params;
+    try {
+      // Get current date and time
+      const currentTime = new Date();
+  
+      // Find timers by storeId and include only currently active timers
+      const timers = await Timer.find({
+        storeId,
+        startDate: { $lte: currentTime },  // Timer has started or is starting now
+        endDate: { $gte: currentTime }      // Timer is still ongoing or just ending now
+      });
+  
+      res.status(200).json(timers);
+    } catch (error) {
+      res.status(500).json({ message: 'Server Error', error: error.message });
+    }
+  };
+  
+  
+  const getAllTimersByStore = async (req, res) => {
+    const { storeId } = req.params;
+    try {
+      // Get current date and time
+      const currentTime = new Date();
+  
+      // Find timers by storeId that are either:
+      // 1. Currently active
+      // 2. Upcoming
+      const timers = await Timer.find({
+        storeId,
+        $or: [
+          { startDate: { $lte: currentTime }, endDate: { $gte: currentTime } }, // Currently active timers
+          { startDate: { $gt: currentTime } } // Upcoming timers
+        ]
+      });
+  
+      res.status(200).json(timers);
+    } catch (error) {
+      res.status(500).json({ message: 'Server Error', error: error.message });
+    }
+  };
+  
 
 // @desc   Create a new countdown timer
 // @route  POST /api/timers
@@ -85,4 +119,4 @@ const deleteTimer = async (req, res) => {
   }
 };
 
-export { getTimersByStore, createTimer, updateTimer, deleteTimer };
+export { getTimersByStore, createTimer, updateTimer, deleteTimer, getAllTimersByStore };
