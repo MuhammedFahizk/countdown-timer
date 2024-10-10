@@ -12,7 +12,7 @@ const ListTimers = () => {
   // Function to fetch timers from the API
   const fetchTimers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/timers/all/theh2o2');
+      const response = await fetch('https://countdown-timer-psi-ochre.vercel.app//api/timers/all/theh2o2');
       if (!response.ok) {
         throw new Error('Failed to fetch timers');
       }
